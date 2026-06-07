@@ -1,0 +1,21 @@
+---
+description: Never use autoFocus inside modals or overlays
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# No autoFocus inside modals
+
+Never add `autoFocus` to any input, textarea, or select that lives inside a modal, sheet, drawer, or overlay component (e.g. `ReceiptModal`, `DetailSheet`, `AddItemSheet`, `PasswordModal`).
+
+On mobile, `autoFocus` immediately triggers the soft keyboard, which pushes the modal up or partially offscreen before the user can read the content.
+
+```tsx
+/* ✅ correct */
+<input value={name} onChange={...} placeholder="Alex" />
+
+/* ❌ never do this inside a modal */
+<input autoFocus value={name} onChange={...} placeholder="Alex" />
+```
+
+The only exception is admin-side inline editors that are explicitly triggered by a user tap/click (e.g. the price edit field in `ItemCard` admin mode), where immediate focus is intentional and there is no modal container.
