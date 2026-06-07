@@ -1,0 +1,348 @@
+[
+  {
+    "id": 1,
+    "name": "Black Cropped Leather Jacket",
+    "price": 55,
+    "category": "Clothing",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Sleek black cropped leather jacket with hood, elastic cuffs and hem. Zip-up front, lightweight and structured. Edgy but versatile — works dressed up or down.",
+    "imagePaths": [
+      "/images/items/jacket1.jpg",
+      "/images/items/jacket2.jpg"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "id": 2,
+    "name": "IKEA Kallax Shelf (4×4, White)",
+    "price": 80,
+    "category": "Furniture",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Large white Kallax bookshelf, 4×4 cube configuration. Solid condition, a few scuffs from normal use. Contents not included. Pickup only.",
+    "imagePaths": [
+      "/images/items/shelf.jpg"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "id": 3,
+    "name": "Bungee Stretch Cords (8-pack)",
+    "price": 8,
+    "category": "Utility",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Duomax Pro 12\" adjustable bungee cords, 8-pack. Brand new, still on original packaging card. Ball-end style.",
+    "imagePaths": [
+      "/images/items/bungee.jpg"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "id": 4,
+    "name": "Logitech Brio 4K Webcam",
+    "price": 120,
+    "category": "Tech",
+    "status": "claimed",
+    "queueCount": 0,
+    "description": "Logitech Brio ultra-wide 4K webcam with monitor clip mount. Works great, excellent image quality. Ideal for WFH or streaming setups.",
+    "imagePaths": [
+      "/images/items/brio1.jpg",
+      "/images/items/brio2.jpg"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "id": 5,
+    "name": "Logitech Mevo Core 4K Camera",
+    "price": 90,
+    "category": "Tech",
+    "status": "claimed",
+    "queueCount": 0,
+    "description": "Compact cylindrical 4K streaming/recording camera by Logitech. Ultra-wide lens, 8.5MP sensor. USB-C cable included. Good condition.",
+    "imagePaths": [
+      "/images/items/mevo1.jpg",
+      "/images/items/mevo2.jpg",
+      "/images/items/mevo3.jpg"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "id": 6,
+    "name": "Flexible Gorilla Tripod",
+    "price": 15,
+    "category": "Tech",
+    "status": "claimed",
+    "queueCount": 0,
+    "description": "Bendable gorilla-style tripod with universal phone clamp and ball head. Wraps around surfaces, stands on its own. Good condition, all joints intact.",
+    "imagePaths": [
+      "/images/items/tripod1.jpg",
+      "/images/items/tripod2.jpg"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "id": 7,
+    "name": "Mini Clip-On LED Ring Light",
+    "price": 18,
+    "category": "Tech",
+    "status": "claimed",
+    "queueCount": 0,
+    "description": "Small USB ring light with desk/monitor clip mount. Diffused face for soft, flattering light. Great for calls, content creation, or makeup. USB-powered.",
+    "imagePaths": [
+      "/images/items/ring1.jpg",
+      "/images/items/ring2.jpg"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "id": 8,
+    "name": "Vibration Fitness Plate",
+    "price": 65,
+    "category": "Fitness",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Blue vibration platform with digital control panel and resistance bands. Multiple speed settings, compact enough to slide under a bed. Good condition.",
+    "imagePaths": [
+      "/images/items/vibration.jpg"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "id": 9,
+    "name": "Renpho Smart Body Scale",
+    "price": 25,
+    "category": "Wellness",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Renpho Bluetooth glass scale with 4 electrodes. Tracks weight, BMI, body fat, muscle mass and more via the Renpho app. Minimal wear, works great.",
+    "imagePaths": [
+      "/images/items/scale.jpg"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "id": 10,
+    "name": "Cutting Board + Charcuterie Set",
+    "price": 30,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Two boards sold together: a large bamboo cutting board with juice grooves and a dark acacia wood charcuterie/paddle board. Both well-used but solid.",
+    "imagePaths": [
+      "/images/items/boards.jpg"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "id": 11,
+    "name": "Glass Electric Kettle (LED)",
+    "price": 35,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "1.7L glass electric kettle with blue LED illumination that glows while boiling. Stainless steel base, visible water level markings. Great condition.",
+    "imagePaths": [
+      "/images/items/kettle.jpg"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "id": 12,
+    "name": "Beige Loveseat Sofa",
+    "price": 250,
+    "category": "Furniture",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Compact 2-seater sofa in oatmeal/beige textured fabric with curved arms and wooden legs. Clean, no visible stains. Pillows not included. Pickup only.",
+    "imagePaths": [
+      "/images/items/sofa.jpg"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "id": 13,
+    "name": "IKEA Långfjäll Office Chair",
+    "price": 90,
+    "category": "Furniture",
+    "status": "available",
+    "queueCount": 0,
+    "description": "IKEA Långfjäll swivel chair in dusty rose/pink fabric with black base. Comfortable, supportive back. Light use, great condition. No wheels — glides.",
+    "imagePaths": [
+      "/images/items/chair.jpg"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "id": 14,
+    "name": "Nespresso Aeroccino 3 Frother",
+    "price": 55,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Nespresso Aeroccino 3 electric milk frother. Froths hot or cold milk in under a minute. Works perfectly. Great for lattes, matcha, cappuccinos.",
+    "imagePaths": [
+      "/images/items/frother.jpg"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "id": 15,
+    "name": "White Metal Mesh Shelf (4-tier)",
+    "price": 45,
+    "category": "Furniture",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Slim 4-tier white metal mesh shelving unit — great for balcony, bathroom, or entryway. Lightweight, easy to assemble. Good condition.",
+    "imagePaths": [
+      "/images/items/metalshelf.jpg"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "id": 16,
+    "name": "Side Table with Bin Holder",
+    "price": 40,
+    "category": "Furniture",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Minimalist beige metal side table with integrated bin/basket slot underneath. Clean Scandinavian look. Light outdoor use. Bin not included.",
+    "imagePaths": [
+      "/images/items/sidetable.jpg"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "id": 17,
+    "name": "2-Tier Pull-Out Kitchen Organizer",
+    "price": 20,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "White 2-tier sliding kitchen organizer rack with side hooks and pull-out base tray. Great for under-sink or pantry storage. Good condition.",
+    "imagePaths": [
+      "/images/items/organizer.jpg"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "id": 18,
+    "name": "Nonstick Copper Bakeware Set",
+    "price": 22,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Copper-tone nonstick bakeware set: one large sheet pan + one square baking pan. Well-used but functional, no major scratches on nonstick surface.",
+    "imagePaths": [
+      "/images/items/bakeware.jpg"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "id": 19,
+    "name": "Ninja Professional Blender",
+    "price": 55,
+    "category": "Kitchen",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Ninja Professional blender motor unit. Powerful, great for smoothies, soups, and sauces. Includes pitcher. Good working condition.",
+    "imagePaths": [
+      "/images/items/ninja.jpg"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "id": 20,
+    "name": "Universal Travel Adapter",
+    "price": 15,
+    "category": "Tech",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Compact all-in-one travel adapter with multiple plug types. Works in 150+ countries. USB ports included. Good condition.",
+    "imagePaths": [
+      "/images/items/adapter.jpg"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "id": 21,
+    "name": "Scallop Ceramic Candle",
+    "price": 35,
+    "category": "Decor",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Gorgeous white and blush pink scallop-edged ceramic lidded candle with double wick. Barely used — wicks still pristine. The vessel alone is a keepsake.",
+    "imagePaths": [
+      "/images/items/candle1.jpg",
+      "/images/items/candle2.jpg"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "id": 22,
+    "name": "Gold T-Bar Jewelry Stand",
+    "price": 28,
+    "category": "Decor",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Two-tier brass/gold T-bar jewelry display stand with walnut wood base. Perfect for necklaces, bracelets, earrings. Elegant and minimal.",
+    "imagePaths": [
+      "/images/items/jewelrystand.jpg"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "id": 23,
+    "name": "Gold Candle Warmer Lamp",
+    "price": 45,
+    "category": "Decor",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Adjustable gold/brass candle warmer lamp with ribbed amber glass shade and natural wood oval base. Melts candles from above — no open flame. Great condition.",
+    "imagePaths": [
+      "/images/items/warmerlamp1.jpg",
+      "/images/items/warmerlamp2.jpg"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "id": 24,
+    "name": "Essential Oils Bundle",
+    "price": 25,
+    "category": "Wellness",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Jo Malone reed diffuser + 5 essential oils: mandarin, lemon, lavender, rosemary, and one mystery blend. Diffusers partially used, oils mostly full.",
+    "imagePaths": [
+      "/images/items/essentialoils.jpg"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "id": 25,
+    "name": "Acrylic Makeup Organizer",
+    "price": 12,
+    "category": "Beauty",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Clear acrylic 3-cup organizer tray — great for brushes, skincare, or desk supplies. Compact, sturdy. Contents not included.",
+    "imagePaths": [
+      "/images/items/organizer.jpg"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "id": 26,
+    "name": "UV/LED Gel Nail Lamp",
+    "price": 20,
+    "category": "Beauty",
+    "status": "available",
+    "queueCount": 0,
+    "description": "Easkep diamond-faceted UV/LED nail curing lamp with 4 timer settings (10s/30s/60s/99s) and motion sensor. Works great for gel manis at home.",
+    "imagePaths": [
+      "/images/items/naillamp.jpg"
+    ],
+    "sortOrder": 26
+  }
+]

@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #bbb;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #000 !important;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wiggle-on-hover:hover {
+  animation: wiggle 0.9s ease-in-out;
+  cursor: default;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.animate-spin-slow {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes printReceipt {
+  from { max-height: 0; }
+  to   { max-height: 1200px; }
+}
+
+.animate-print-receipt {
+  animation: printReceipt 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  overflow: hidden;
+}
+
+@keyframes wiggle {
+  0%   { transform: rotate(0deg); }
+  30%  { transform: rotate(-5deg); }
+  70%  { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes garage-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-70px) scale(0.7);
+  }
+  72% {
+    transform: translateY(8px) scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
