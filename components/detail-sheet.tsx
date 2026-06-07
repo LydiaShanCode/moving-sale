@@ -29,13 +29,20 @@ function useBidder() {
   return { bidder, save };
 }
 
+// Error message sent by the server when required fields (including bidderId) are missing
+const SESSION_ERROR = "itemId, amount, name, email, and bidderId are required";
+
 export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
-  const { bidder } = useBidder();
+  const { bidder, save } = useBidder();
   const [amount, setAmount] = useState("");
   const [photoIdx, setPhotoIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ newBid: number } | null>(null);
+  // Fallback identity fields — shown only when session/bidderId error fires
+  const [showIdentityFallback, setShowIdentityFallback] = useState(false);
+  const [fallbackName, setFallbackName] = useState("");
+  const [fallbackEmail, setFallbackEmail] = useState("");
 
   const auctionOpen = Date.now() < AUCTION_END.getTime();
   const minBid = item.currentBid !== null ? item.currentBid + 1 : item.startingBid;
@@ -45,14 +52,24 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
     if (!amount || submitting) return;
     const amountNum = parseInt(amount, 10);
     if (isNaN(amountNum) || amountNum < minBid) { setError(`Minimum bid is $${minBid}`); return; }
+    if (showIdentityFallback && (!fallbackName.trim() || !fallbackEmail.trim())) return;
     setSubmitting(true);
     setError(null);
     try {
-      const result = await onBid(item.id, amountNum, bidder.name, bidder.email);
+      const name = showIdentityFallback ? fallbackName.trim() : bidder.name;
+      const email = showIdentityFallback ? fallbackEmail.trim() : bidder.email;
+      if (showIdentityFallback) save(name, email);
+      const result = await onBid(item.id, amountNum, name, email);
       playCoin();
       setSuccess(result);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not place bid");
+      const msg = e instanceof Error ? e.message : "Could not place bid";
+      setError(msg);
+      if (msg === SESSION_ERROR) {
+        setShowIdentityFallback(true);
+        setFallbackName(bidder.name);
+        setFallbackEmail(bidder.email);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -105,8 +122,24 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
         </div>
       ) : (
         <>
-          {error && <div style={{ fontSize: 10, color: "#ff4444", marginBottom: 8 }}>{error}</div>}
+          {error && (
+            <div style={{ fontSize: 10, color: "#ff4444", marginBottom: 8 }}>
+              {error === SESSION_ERROR ? "Session issue — please confirm your name and email below." : error}
+            </div>
+          )}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {showIdentityFallback && (
+              <>
+                <div>
+                  <div style={receiptLabel}>Your name</div>
+                  <input value={fallbackName} onChange={e => setFallbackName(e.target.value)} placeholder="Alex" style={receiptInput} />
+                </div>
+                <div>
+                  <div style={receiptLabel}>Email</div>
+                  <input value={fallbackEmail} onChange={e => setFallbackEmail(e.target.value)} placeholder="alex@email.com" type="email" style={receiptInput} />
+                </div>
+              </>
+            )}
             <div>
               <div style={receiptLabel}>Your bid ($)</div>
               <input value={amount} onChange={e => setAmount(e.target.value.replace(/\D/g, ""))} placeholder={String(minBid)} type="number" min={minBid} style={receiptInput} />
@@ -115,7 +148,7 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
             <button
               type="button"
               onClick={handleBid}
-              disabled={!amount || submitting}
+              disabled={!amount || submitting || (showIdentityFallback && (!fallbackName.trim() || !fallbackEmail.trim()))}
               style={{
                 width: "100%",
                 padding: "11px",

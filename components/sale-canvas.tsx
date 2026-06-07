@@ -158,7 +158,7 @@ export function SaleCanvas() {
   };
 
   const handleBid = async (id: number, amount: number, name: string, email: string) => {
-    const bidderId = localStorage.getItem("bidder_id") ?? crypto.randomUUID();
+    const bidderId = localStorage.getItem("bidder_id") || crypto.randomUUID();
     const res = await fetch("/api/bids", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
