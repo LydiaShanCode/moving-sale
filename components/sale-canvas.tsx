@@ -281,9 +281,34 @@ export function SaleCanvas() {
             textAlign: "center",
             padding: "5px 0",
             textTransform: "uppercase",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Admin mode · hold title to exit
+          Admin mode
+          <button
+            type="button"
+            onClick={lockAdmin}
+            title="Exit admin"
+            style={{
+              position: "absolute",
+              right: 14,
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              lineHeight: 0,
+              color: "#888",
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -461,6 +486,7 @@ export function SaleCanvas() {
           onSuccess={() => {
             setShowPasswordModal(false);
             setIsAdmin(true);
+            setIsGarageSaleView(false);
           }}
           onDismiss={() => setShowPasswordModal(false)}
         />

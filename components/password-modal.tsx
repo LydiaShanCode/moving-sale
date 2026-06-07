@@ -52,7 +52,6 @@ export function PasswordModal({ onSuccess, onDismiss }: PasswordModalProps) {
       <div style={{ marginBottom: 16 }}>
         <div style={receiptLabel}>Password</div>
         <input
-          autoFocus
           type="password"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
