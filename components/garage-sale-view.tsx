@@ -103,11 +103,12 @@ type Props = {
   onItemClick: (item: SaleItemPublic) => void;
   onClose: () => void;
   onTestNotice?: () => void;
+  onAdminClick?: () => void;
 };
 
 const BLANKET_ASPECT = 8142 / 6472; // width / height
 
-export function GarageSaleView({ items, onItemClick, onClose, onTestNotice }: Props) {
+export function GarageSaleView({ items, onItemClick, onClose, onTestNotice, onAdminClick }: Props) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tileCount, setTileCount] = useState(2);
@@ -123,19 +124,27 @@ export function GarageSaleView({ items, onItemClick, onClose, onTestNotice }: Pr
     return () => ro.disconnect();
   }, []);
 
-  // ── Close / back-to-grid button ────────────────────────────────────────────
+  // ── Top-right icon buttons ────────────────────────────────────────────────
+  const iconBtnStyle: React.CSSProperties = {
+    background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 0,
+  };
   const toggleBtn = (
-    <button
-      type="button"
-      onClick={onClose}
-      title="Back to grid"
-      style={{ position: "fixed", top: 16, right: 18, zIndex: 200, background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 0 }}
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="#bbb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      </svg>
-    </button>
+    <div style={{ position: "fixed", top: 16, right: 18, zIndex: 200, display: "flex", alignItems: "center", gap: 14 }}>
+      {onAdminClick && (
+        <button type="button" onClick={onAdminClick} title="Admin" style={iconBtnStyle}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="#bbb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+        </button>
+      )}
+      <button type="button" onClick={onClose} title="Back to grid" style={iconBtnStyle}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="#bbb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+      </button>
+    </div>
   );
 
   return (

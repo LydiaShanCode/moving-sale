@@ -443,6 +443,7 @@ export function SaleCanvas() {
             onItemClick={(item) => withPickupNotice(() => setSelectedItem(item))}
             onClose={() => setIsGarageSaleView(false)}
             onTestNotice={() => setShowPickupNotice(true)}
+            onAdminClick={() => setShowPasswordModal(true)}
           />
         </div>
       )}
