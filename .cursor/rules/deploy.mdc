@@ -1,0 +1,16 @@
+---
+description: Deploy to Vercel via /deploy command
+alwaysApply: true
+---
+
+# /deploy command
+
+When the user types `/deploy`, immediately read and follow the skill at `/Users/lydiashan/.cursor/skills/deploy-to-vercel/SKILL.md`.
+
+Do not ask for confirmation. Execute the full workflow:
+1. Run `git status`, `git diff`, `git diff --cached`, `git log --oneline -5` in parallel
+2. Stage all changes with `git add -A`
+3. Generate a descriptive commit message from the diff
+4. Commit with that message
+5. Push to `origin main`
+6. Report the commit message and confirm Vercel will auto-deploy
