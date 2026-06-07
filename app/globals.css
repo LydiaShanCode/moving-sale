@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -54,15 +54,55 @@ select:focus {
   animation: spin 1s linear infinite;
 }
 
-@keyframes printReceipt {
-  from { max-height: 0; }
-  to   { max-height: 1200px; }
+@keyframes printReceiptFeed {
+  from {
+    max-height: 0;
+  }
+  to {
+    max-height: 1200px;
+  }
 }
 
 .animate-print-receipt {
-  animation: printReceipt 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: printReceiptFeed 1.8s steps(24, end) forwards;
   overflow: hidden;
 }
+
+@keyframes receiptLinePrint {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.receipt-print-body {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.receipt-print-body > * {
+  opacity: 0;
+  animation: receiptLinePrint 0.12s steps(1, end) forwards;
+}
+
+.receipt-print-body > *:nth-child(1)  { animation-delay: 0.08s; }
+.receipt-print-body > *:nth-child(2)  { animation-delay: 0.21s; }
+.receipt-print-body > *:nth-child(3)  { animation-delay: 0.34s; }
+.receipt-print-body > *:nth-child(4)  { animation-delay: 0.47s; }
+.receipt-print-body > *:nth-child(5)  { animation-delay: 0.59s; }
+.receipt-print-body > *:nth-child(6)  { animation-delay: 0.72s; }
+.receipt-print-body > *:nth-child(7)  { animation-delay: 0.85s; }
+.receipt-print-body > *:nth-child(8)  { animation-delay: 0.98s; }
+.receipt-print-body > *:nth-child(9)  { animation-delay: 1.10s; }
+.receipt-print-body > *:nth-child(10) { animation-delay: 1.23s; }
+.receipt-print-body > *:nth-child(11) { animation-delay: 1.36s; }
+.receipt-print-body > *:nth-child(12) { animation-delay: 1.49s; }
+.receipt-print-body > *:nth-child(13) { animation-delay: 1.61s; }
+.receipt-print-body > *:nth-child(14) { animation-delay: 1.70s; }
+.receipt-print-body > *:nth-child(15) { animation-delay: 1.78s; }
 
 @keyframes wiggle {
   0%   { transform: rotate(0deg); }

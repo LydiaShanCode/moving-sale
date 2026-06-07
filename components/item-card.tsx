@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { SaleItemPublic } from "@/lib/types";
 import { AUCTION_END } from "@/lib/site";
+import { playSticker, playCoin } from "@/lib/sounds";
 
 type ItemCardProps = {
   item: SaleItemPublic;
@@ -59,6 +60,8 @@ export function ItemCard({
   const [bidError, setBidError] = useState<string | null>(null);
   const [bidSuccess, setBidSuccess] = useState<number | null>(null);
   const { bidder, save } = useBidder();
+  // Tracks whether the sticker sound has already fired for the current hover session
+  const hasPlayedStickerRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
@@ -86,6 +89,7 @@ export function ItemCard({
   const handleCardClick = () => {
     if (isAdmin || isClaimed) return;
     if (isMobile) {
+      playSticker();
       onClick?.(item);
     } else {
       const openBidForm = () => {
@@ -110,6 +114,7 @@ export function ItemCard({
     try {
       save(name.trim(), email.trim());
       const result = await onBid(item.id, amountNum, name.trim(), email.trim());
+      playCoin();
       setBidSuccess(result.newBid);
       setTimeout(() => setShowBidForm(false), 2000);
     } catch (err) {
@@ -122,8 +127,18 @@ export function ItemCard({
   return (
     <div
       onClick={handleCardClick}
-      onMouseEnter={() => !isMobile && !isAdmin && !showBidForm && setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => {
+        if (isMobile || isAdmin || showBidForm) return;
+        setHovered(true);
+        if (!hasPlayedStickerRef.current) {
+          hasPlayedStickerRef.current = true;
+          playSticker();
+        }
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+        hasPlayedStickerRef.current = false;
+      }}
       style={{
         background: "transparent",
         border: isAdmin ? "1.5px solid #000" : "none",

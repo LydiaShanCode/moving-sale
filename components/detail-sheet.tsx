@@ -5,6 +5,8 @@ import Image from "next/image";
 import type { SaleItemPublic } from "@/lib/types";
 import { AUCTION_END } from "@/lib/site";
 import { ReceiptModal, ReceiptDivider, receiptInput, receiptLabel } from "./receipt-modal";
+import { ReceiptCheckIcon } from "./receipt-icons";
+import { playCoin } from "@/lib/sounds";
 
 type DetailSheetProps = {
   item: SaleItemPublic;
@@ -28,33 +30,26 @@ function useBidder() {
 }
 
 export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
-  const { bidder, save } = useBidder();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const { bidder } = useBidder();
   const [amount, setAmount] = useState("");
   const [photoIdx, setPhotoIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ newBid: number } | null>(null);
 
-  useEffect(() => {
-    if (bidder.name) setName(bidder.name);
-    if (bidder.email) setEmail(bidder.email);
-  }, [bidder.name, bidder.email]);
-
   const auctionOpen = Date.now() < AUCTION_END.getTime();
   const minBid = item.currentBid !== null ? item.currentBid + 1 : item.startingBid;
   const displayBid = item.currentBid ?? item.startingBid;
 
   const handleBid = async () => {
-    if (!name.trim() || !email.trim() || !amount || submitting) return;
+    if (!amount || submitting) return;
     const amountNum = parseInt(amount, 10);
     if (isNaN(amountNum) || amountNum < minBid) { setError(`Minimum bid is $${minBid}`); return; }
     setSubmitting(true);
     setError(null);
     try {
-      save(name.trim(), email.trim());
-      const result = await onBid(item.id, amountNum, name.trim(), email.trim());
+      const result = await onBid(item.id, amountNum, bidder.name, bidder.email);
+      playCoin();
       setSuccess(result);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not place bid");
@@ -87,17 +82,14 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
         <div>
           <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2 }}>{item.name}</div>
-          <div style={{ fontSize: 10, color: "#bbb", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.06em" }}>{item.category}</div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: "-0.03em" }}>${displayBid}</div>
           <div style={{ fontSize: 9, color: "#bbb", marginTop: 1 }}>
-            {item.currentBid !== null ? `${item.bidCount} bid${item.bidCount === 1 ? "" : "s"} · was $${item.price}` : `starting · was $${item.price}`}
+            {item.currentBid !== null ? `${item.bidCount} bid${item.bidCount === 1 ? "" : "s"}` : "no bids yet"}
           </div>
         </div>
       </div>
-
-      <p style={{ fontSize: 11, color: "#888", lineHeight: 1.6, marginBottom: 4 }}>{item.description}</p>
 
       <ReceiptDivider />
 
@@ -105,44 +97,35 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
         <div style={{ textAlign: "center", fontSize: 11, color: "#aaa", padding: "12px 0" }}>Auction has ended</div>
       ) : success ? (
         <div style={{ textAlign: "center", padding: "12px 0" }}>
-          <div style={{ fontSize: 18, marginBottom: 4 }}>✓</div>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>
+            <ReceiptCheckIcon size={22} />
+          </div>
           <div style={{ fontSize: 13, fontWeight: 600 }}>Bid placed — ${success.newBid}</div>
           <div style={{ fontSize: 10, color: "#aaa", marginTop: 4 }}>{"I'll email you if you win. Pickup Jun 14."}</div>
         </div>
       ) : (
         <>
-          <div style={{ fontSize: 10, color: "#bbb", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
-            Place a bid · min ${minBid}
-          </div>
           {error && <div style={{ fontSize: 10, color: "#ff4444", marginBottom: 8 }}>{error}</div>}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
-              <div style={receiptLabel}>Your name</div>
-              <input value={name} onChange={e => setName(e.target.value)} placeholder="Alex" style={receiptInput} />
-            </div>
-            <div>
-              <div style={receiptLabel}>Email</div>
-              <input value={email} onChange={e => setEmail(e.target.value)} placeholder="alex@email.com" type="email" style={receiptInput} />
-            </div>
-            <div>
               <div style={receiptLabel}>Your bid ($)</div>
-              <input value={amount} onChange={e => setAmount(e.target.value.replace(/\D/g, ""))} placeholder={String(minBid)} type="number" min={minBid} style={receiptInput} />
+              <input value={amount} onChange={e => setAmount(e.target.value.replace(/\D/g, ""))} placeholder={String(minBid)} type="number" min={minBid} style={receiptInput} autoFocus />
             </div>
             <ReceiptDivider />
             <button
               type="button"
               onClick={handleBid}
-              disabled={!name.trim() || !email.trim() || !amount || submitting}
+              disabled={!amount || submitting}
               style={{
                 width: "100%",
                 padding: "11px",
-                background: name.trim() && email.trim() && amount ? "#000" : "#e8e6e1",
-                color: name.trim() && email.trim() && amount ? "#fff" : "#aaa",
+                background: amount ? "#000" : "#e8e6e1",
+                color: amount ? "#fff" : "#aaa",
                 border: "none",
                 borderRadius: 4,
                 fontSize: 12,
                 fontWeight: 600,
-                cursor: name.trim() && email.trim() && amount ? "pointer" : "default",
+                cursor: amount ? "pointer" : "default",
                 letterSpacing: "0.04em",
               }}
             >

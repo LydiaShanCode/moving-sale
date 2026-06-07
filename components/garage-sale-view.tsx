@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { SaleItemPublic } from "@/lib/types";
 import { AUCTION_END } from "@/lib/site";
@@ -62,17 +62,17 @@ function EndDateTag() {
           </filter>
         </defs>
       </svg>
-      <div style={{ display: "inline-block", background: "#fffaf9", padding: "5px 14px 6px", textAlign: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.18)", filter: "url(#worn-edge)" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 5 }}>
+      <div style={{ display: "inline-block", background: "#fffaf9", padding: "4px 10px 5px", textAlign: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.18)", filter: "url(#worn-edge)" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 4 }}>
           <div style={stripe} /><div style={stripe} />
         </div>
-        <div style={{ fontSize: 11, color: "#c0392b", fontWeight: 600, letterSpacing: "0.04em", fontFamily: "Courier New, Courier, monospace", lineHeight: 1.3 }}>
+        <div style={{ fontSize: 9, color: "#c0392b", fontWeight: 600, letterSpacing: "0.04em", fontFamily: "Courier New, Courier, monospace", lineHeight: 1.3 }}>
           Ends {endLabel}
         </div>
-        <div style={{ fontSize: 11, color: "#c0392b", fontFamily: "Courier New, Courier, monospace", fontVariantNumeric: "tabular-nums", marginTop: 2, lineHeight: 1.3 }}>
+        <div style={{ fontSize: 9, color: "#c0392b", fontFamily: "Courier New, Courier, monospace", fontVariantNumeric: "tabular-nums", marginTop: 2, lineHeight: 1.3 }}>
           {fmt(t)}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 5 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 4 }}>
           <div style={stripe} /><div style={stripe} />
         </div>
       </div>
@@ -102,10 +102,26 @@ type Props = {
   items: SaleItemPublic[];
   onItemClick: (item: SaleItemPublic) => void;
   onClose: () => void;
+  onTestNotice?: () => void;
 };
 
-export function GarageSaleView({ items, onItemClick, onClose }: Props) {
+const BLANKET_ASPECT = 8142 / 6472; // width / height
+
+export function GarageSaleView({ items, onItemClick, onClose, onTestNotice }: Props) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [tileCount, setTileCount] = useState(2);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const tileH = el.offsetWidth / BLANKET_ASPECT;
+      setTileCount(Math.ceil(el.offsetHeight / tileH) + 1);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // ── Close / back-to-grid button ────────────────────────────────────────────
   const toggleBtn = (
@@ -113,11 +129,11 @@ export function GarageSaleView({ items, onItemClick, onClose }: Props) {
       type="button"
       onClick={onClose}
       title="Back to grid"
-      style={{ position: "fixed", top: 16, right: 18, zIndex: 200, background: "rgba(255,255,255,0.85)", border: "1.5px solid #ddd", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(6px)", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
+      style={{ position: "fixed", top: 16, right: 18, zIndex: 200, background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 0 }}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="#888" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="#bbb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
       </svg>
     </button>
   );
@@ -125,92 +141,102 @@ export function GarageSaleView({ items, onItemClick, onClose }: Props) {
   return (
     <div style={{ background: "#FCFBF8", padding: `0 ${PAGE_MARGIN}px`, minHeight: "100vh" }}>
       {toggleBtn}
+      {process.env.NODE_ENV !== "production" && onTestNotice && (
+        <button
+          type="button"
+          onClick={() => { localStorage.removeItem("pickup_disclaimer_seen"); onTestNotice(); }}
+          style={{ position: "fixed", bottom: 16, left: 16, zIndex: 200, fontSize: 9, color: "#bbb", background: "none", border: "1px dashed #ddd", borderRadius: 4, padding: "3px 7px", cursor: "pointer" }}
+        >
+          test notice
+        </button>
+      )}
 
       <div style={{ maxWidth: CONTENT_MAX, margin: `${CORNER_OVERLAP + 20}px auto 0` }}>
-        {/*
-          Blanket tiles vertically as a CSS background — no fixed-height <Image>.
-          Grid grows with content; blanket repeats seamlessly behind it.
-        */}
-        <div
-          style={{
-            position: "relative",
-            backgroundImage: "url('/assets/blanket.png')",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "100% 100%",
-            padding: `${CORNER_OVERLAP + 32}px 20px 56px`,
-          }}
-        >
-          {/* Logo — top-left corner, tilted */}
-          <div style={{ position: "absolute", top: -CORNER_OVERLAP, left: 12, zIndex: 10, transform: "rotate(-6deg)", transformOrigin: "bottom left" }}>
-            <div className="wiggle-on-hover" style={{ transformOrigin: "center" }}>
+        {/* Outer: establishes stacking context */}
+        <div ref={containerRef} style={{ position: "relative" }}>
+
+          {/* ── Blanket tile layer (behind everything) ── */}
+          <div
+            style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 0, pointerEvents: "none" }}
+            aria-hidden
+          >
+            {Array.from({ length: tileCount }).map((_, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={i} src="/assets/blanket.png" alt="" style={{ display: "block", width: "100%" }} />
+            ))}
+          </div>
+
+          {/* ── Content layer ── */}
+          <div style={{ position: "relative", zIndex: 1, padding: `${CORNER_OVERLAP + 32}px 20px 56px` }}>
+
+            {/* Logo — top-left corner, tilted */}
+            <div style={{ position: "absolute", top: -CORNER_OVERLAP, left: 12, zIndex: 10, transform: "rotate(-6deg)", transformOrigin: "bottom left", pointerEvents: "none" }}>
               <Image src="/assets/lydia's-garage-sale.png" alt="Lydia's Garage Sale" width={150} height={94} style={{ display: "block", filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.28))" }} priority />
             </div>
-          </div>
 
-          {/* Date tag — top-right corner, tilted */}
-          <div style={{ position: "absolute", top: -CORNER_OVERLAP + 10, right: 12, zIndex: 10, transform: "rotate(5deg)", transformOrigin: "bottom right" }}>
-            <div className="wiggle-on-hover" style={{ transformOrigin: "center" }}>
+            {/* Date tag — behind logo */}
+            <div style={{ position: "absolute", top: -CORNER_OVERLAP + 22, left: 140, zIndex: 8, transform: "rotate(5deg)", transformOrigin: "bottom right", pointerEvents: "none" }}>
               <EndDateTag />
             </div>
-          </div>
 
-          {/* Organic auto-fill grid — adapts columns to any viewport width */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
-              gap: "20px 12px",
-            }}
-          >
-            {items.map((item, i) => {
-              const rotation    = (rand(i * 7 + 3)  - 0.5) * 16; // ±8 deg
-              const yNudge      = (rand(i * 13 + 9) - 0.5) * 14; // ±7 px vertical drift
-              const isHovered   = hoveredId === item.id;
-              const displayPrice = item.currentBid ?? item.startingBid;
+            {/* Organic auto-fill grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
+                gap: "20px 12px",
+              }}
+            >
+              {items.map((item, i) => {
+                const rotation     = (rand(i * 7 + 3)  - 0.5) * 16;
+                const yNudge       = (rand(i * 13 + 9) - 0.5) * 14;
+                const isHovered    = hoveredId === item.id;
+                const displayPrice = item.currentBid ?? item.startingBid;
 
-              return (
-                <div
-                  key={item.id}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    animation: "garage-drop 0.6s cubic-bezier(0.34,1.56,0.64,1) both",
-                    animationDelay: `${i * 55}ms`,
-                  }}
-                >
+                return (
                   <div
+                    key={item.id}
                     style={{
-                      transform: isHovered
-                        ? `rotate(${rotation}deg) translateY(${yNudge}px) scale(1.1)`
-                        : `rotate(${rotation}deg) translateY(${yNudge}px)`,
-                      transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1)",
-                      cursor: "pointer",
-                      position: "relative",
-                      width: "100%",
-                      aspectRatio: "1/1",
-                      zIndex: isHovered ? 10 : 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      animation: "garage-drop 0.6s cubic-bezier(0.34,1.56,0.64,1) both",
+                      animationDelay: `${i * 55}ms`,
                     }}
-                    onMouseEnter={() => setHoveredId(item.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                    onClick={() => onItemClick(item)}
                   >
-                    <Image
-                      src={item.images[0]}
-                      alt={item.name}
-                      fill
-                      sizes="(max-width: 640px) 50vw, (max-width: 960px) 25vw, 200px"
-                      style={{ objectFit: "contain", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.2))" }}
-                    />
-                    {isHovered && (
-                      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 5, pointerEvents: "none" }}>
-                        <PriceSticker name={item.name} price={displayPrice} />
-                      </div>
-                    )}
+                    <div
+                      style={{
+                        transform: isHovered
+                          ? `rotate(${rotation}deg) translateY(${yNudge}px) scale(1.1)`
+                          : `rotate(${rotation}deg) translateY(${yNudge}px)`,
+                        transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+                        cursor: "pointer",
+                        position: "relative",
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        zIndex: isHovered ? 10 : 1,
+                      }}
+                      onMouseEnter={() => setHoveredId(item.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                      onClick={() => onItemClick(item)}
+                    >
+                      <Image
+                        src={item.images[0]}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 960px) 25vw, 200px"
+                        style={{ objectFit: "contain", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.2))" }}
+                      />
+                      {isHovered && (
+                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 5, pointerEvents: "none" }}>
+                          <PriceSticker name={item.name} price={displayPrice} />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

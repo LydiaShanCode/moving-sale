@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ReceiptModal, ReceiptDivider, receiptInput, receiptLabel } from "./receipt-modal";
+import { ReceiptModal, ReceiptDivider, receiptInput, receiptLabel, RECEIPT_FONT } from "./receipt-modal";
+import { ReceiptLoaderIcon, ReceiptPlusIcon } from "./receipt-icons";
 
 type ListingFields = {
   name: string;
@@ -130,7 +131,7 @@ export function AddItemSheet({ onClose, onAdd }: AddItemSheetProps) {
           onClick={() => fileRef.current?.click()}
           style={{ width: "100%", height: 120, border: "1px dashed #d0cdc8", borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", gap: 6, marginBottom: 16, background: "transparent" }}
         >
-          <div style={{ fontSize: 22, color: "#bbb" }}>+</div>
+          <ReceiptPlusIcon size={22} color="#bbb" />
           <div style={{ fontSize: 11, color: "#bbb", letterSpacing: "0.04em" }}>tap to add photos</div>
         </div>
       ) : (
@@ -141,16 +142,18 @@ export function AddItemSheet({ onClose, onAdd }: AddItemSheetProps) {
           ))}
           <div
             onClick={() => fileRef.current?.click()}
-            style={{ width: 76, height: 76, border: "1px dashed #d0cdc8", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, fontSize: 18, color: "#bbb" }}
+            style={{ width: 76, height: 76, border: "1px dashed #d0cdc8", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}
           >
-            +
+            <ReceiptPlusIcon size={18} color="#bbb" />
           </div>
         </div>
       )}
 
       {loading && (
         <div style={{ textAlign: "center", padding: "16px 0", color: "#aaa", fontSize: 11, letterSpacing: "0.04em" }}>
-          <div className="animate-spin-slow" style={{ fontSize: 16, marginBottom: 6, display: "inline-block" }}>◌</div>
+          <div className="animate-spin-slow" style={{ marginBottom: 6, display: "inline-flex" }}>
+            <ReceiptLoaderIcon size={18} color="#aaa" />
+          </div>
           <div>reading photo…</div>
         </div>
       )}
@@ -183,7 +186,7 @@ export function AddItemSheet({ onClose, onAdd }: AddItemSheetProps) {
                     color: "#000",
                     outline: "none",
                     padding: "6px 0",
-                    fontFamily: "inherit",
+                    fontFamily: RECEIPT_FONT,
                   }}
                 >
                   {CATS.map(c => <option key={c}>{c}</option>)}
@@ -207,7 +210,7 @@ export function AddItemSheet({ onClose, onAdd }: AddItemSheetProps) {
                   padding: "6px 0",
                   resize: "none",
                   lineHeight: 1.5,
-                  fontFamily: "inherit",
+                  fontFamily: RECEIPT_FONT,
                 }}
               />
             </div>

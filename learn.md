@@ -1,5 +1,49 @@
 # Debugging Learnings
 
+---
+
+## ⚠️ IMPORTANT RULE — Ask before acting when instructions are ambiguous
+
+**If you are unsure what the user means, or their instructions could be read more than one way, ask for clarification before making changes.**
+
+Do not guess. Do not assume you know which component, property, or scope they mean — even if recent conversation context makes one interpretation seem likely.
+
+**Example (printer mouth, Jun 2026):** User asked for the printer mouth to be "20% bigger." The correct change was increasing the slot/receipt width from `66%` → `79%` of the printer body. Instead, the entire printer container was scaled from `340px` → `408px`, which changed the wrong thing while leaving the mouth proportion unchanged.
+
+**When to ask:**
+- "Bigger/smaller" without a clear subject (mouth vs whole component vs text vs image)
+- References to a "view" when multiple views exist (grid vs picnic/street)
+- "Fix X" when X could live in more than one file or layer
+
+**How to ask:** One short question with 2–3 concrete options, e.g. *"Do you mean widen the paper slot (66% → 79%) or scale the whole printer?"*
+
+---
+
+## Visual bugs are structural storytelling bugs
+
+**What happened:** User wanted receipt paper to look like it was coming out of the printer **mouth line**, not from below the whole printer body. The first fix was a `-7px` negative margin to align the feed with the slot. It didn't work — the paper still visibly started at the bottom edge of the gray printer hood.
+
+**Root cause:** The layout was telling the wrong story. The printer had an opaque "chin" — gray body extending ~7px below the mouth slot. Paper sat *behind* that chin until the hood ended, so no margin tweak could make it read as emerging from the slot. Alignment was a symptom; **occlusion and geometry** were the cause.
+
+**Fix:** Reshape the structure to match the intent:
+- Hood ends at the mouth — no material below the slot
+- Paper starts at the slot (1px tuck under the hood)
+- Layer order: paper (1) → hood (2) → mouth line (3)
+
+**Higher-level takeaway:**
+
+1. **Intent before adjustment.** The design goal was "emerges from slot," not "move element up 7px." Name the intent in rules so future changes don't accidentally undo it.
+
+2. **Layering is part of the design.** Position alone doesn't create an illusion. If opaque material sits where the user expects continuity, spacing won't fix the read.
+
+3. **Anti-patterns matter as much as patterns.** The useful rule isn't "use absolute positioning" — it's "don't put a chin below the mouth."
+
+4. **Document principles, not patches.** Magic numbers (`-7`, `48px`) are implementation details. "Paper emerges from the slot; hood ends at the slot" survives refactors.
+
+**When to apply:** Before tweaking spacing or sizes on a visual bug, ask *what story is the UI telling?* If the structure contradicts the intended read, fix the model first.
+
+---
+
 ## Transparent PNG images still showing grey card background
 
 **Symptom:** Item cards had a visible grey rounded rectangle behind each product photo, even after setting `background: "transparent"` on the card component.

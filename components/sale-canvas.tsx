@@ -7,8 +7,11 @@ import { DetailSheet } from "./detail-sheet";
 import { PasswordModal } from "./password-modal";
 import { AddItemSheet } from "./add-item-sheet";
 import { GarageSaleView } from "./garage-sale-view";
+import { ReceiptModal, ReceiptDivider, receiptInput, receiptLabel } from "./receipt-modal";
+import { ReceiptPackageIcon } from "./receipt-icons";
 import { AUCTION_END } from "@/lib/site";
 import type { SaleItemPublic } from "@/lib/types";
+import { unlockAudio } from "@/lib/sounds";
 
 const POLL_MS = 8000;
 
@@ -45,10 +48,18 @@ export function SaleCanvas() {
   const [selectedItem, setSelectedItem] = useState<SaleItemPublic | null>(null);
   const [items, setItems] = useState<SaleItemPublic[]>([]);
   const [, setCatalogTotal] = useState(0);
-  const [isGarageSaleView, setIsGarageSaleView] = useState(false);
+  const [isGarageSaleView, setIsGarageSaleView] = useState(true);
 
   const [showPickupNotice, setShowPickupNotice] = useState(false);
   const pendingBidAction = useRef<(() => void) | null>(null);
+  const [noticeName, setNoticeName] = useState("");
+  const [noticeEmail, setNoticeEmail] = useState("");
+
+  // Pre-fill from localStorage on mount
+  useEffect(() => {
+    setNoticeName(localStorage.getItem("bidder_name") ?? "");
+    setNoticeEmail(localStorage.getItem("bidder_email") ?? "");
+  }, []);
 
   const withPickupNotice = useCallback((action: () => void) => {
     if (typeof window !== "undefined" && localStorage.getItem("pickup_disclaimer_seen")) {
@@ -62,6 +73,8 @@ export function SaleCanvas() {
   const handlePickupNoticeAcknowledge = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem("pickup_disclaimer_seen", "1");
+      if (noticeName.trim()) localStorage.setItem("bidder_name", noticeName.trim());
+      if (noticeEmail.trim()) localStorage.setItem("bidder_email", noticeEmail.trim());
     }
     setShowPickupNotice(false);
     pendingBidAction.current?.();
@@ -113,6 +126,16 @@ export function SaleCanvas() {
       window.removeEventListener("focus", onFocus);
     };
   }, [fetchItems]);
+
+  useEffect(() => {
+    const unlock = () => unlockAudio();
+    window.addEventListener("pointerdown", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, []);
 
   useEffect(() => {
     if (isAdmin) fetchItems();
@@ -190,6 +213,20 @@ export function SaleCanvas() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#FCFBF8" }}>
+      {/* Dev-only test button for pickup notice */}
+      {process.env.NODE_ENV !== "production" && !isGarageSaleView && !isAdmin && (
+        <button
+          type="button"
+          onClick={() => {
+            localStorage.removeItem("pickup_disclaimer_seen");
+            setShowPickupNotice(true);
+          }}
+          style={{ position: "fixed", bottom: 16, left: 16, zIndex: 55, fontSize: 9, color: "#bbb", background: "none", border: "1px dashed #ddd", borderRadius: 4, padding: "3px 7px", cursor: "pointer" }}
+        >
+          test notice
+        </button>
+      )}
+
       {/* Globe icon — toggle picnic view */}
       {!isGarageSaleView && !isAdmin && (
         <button
@@ -405,6 +442,7 @@ export function SaleCanvas() {
             items={visibleItems}
             onItemClick={(item) => withPickupNotice(() => setSelectedItem(item))}
             onClose={() => setIsGarageSaleView(false)}
+            onTestNotice={() => setShowPickupNotice(true)}
           />
         </div>
       )}
@@ -436,100 +474,78 @@ export function SaleCanvas() {
 
       {/* One-time pickup disclaimer modal */}
       {showPickupNotice && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 300,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 24px",
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Pickup notice"
-        >
-          <div
-            onClick={handlePickupNoticeAcknowledge}
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "rgba(0,0,0,0.5)",
-              backdropFilter: "blur(4px)",
-            }}
-          />
-          <div
-            className="animate-slide-up"
-            style={{
-              position: "relative",
-              background: "#fff",
-              borderRadius: 20,
-              padding: "28px 28px 24px",
-              maxWidth: 360,
-              width: "100%",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
-            }}
-          >
-            <div style={{ fontSize: 28, marginBottom: 12, textAlign: "center" }}>📦</div>
-            <div
-              style={{
-                fontSize: 17,
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                color: "#000",
-                marginBottom: 10,
-                textAlign: "center",
-              }}
-            >
+        <ReceiptModal onClose={handlePickupNoticeAcknowledge} label="Pickup notice" zIndex={300}>
+          <div style={{ textAlign: "center", marginBottom: 4 }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+              <ReceiptPackageIcon size={28} />
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em" }}>
               Pickup is at my farewell party
             </div>
-            <p
-              style={{
-                fontSize: 13,
-                color: "#555",
-                lineHeight: 1.7,
-                textAlign: "center",
-                marginBottom: 18,
-              }}
-            >
-              Items can only be claimed in person at{" "}
-              <a
-                href="https://partiful.com/e/BoaYBHLu23813PUTvyWf"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  color: "#000",
-                  fontWeight: 600,
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                }}
-              >
-                Lydia&rsquo;s Farewell Party
-              </a>{" "}
-              on <strong>Sunday Jun 14, 1:30–5pm</strong>. Make sure you can make it before bidding!
-            </p>
-            <button
-              type="button"
-              onClick={handlePickupNoticeAcknowledge}
-              style={{
-                width: "100%",
-                padding: "13px 0",
-                background: "#000",
-                color: "#fff",
-                border: "none",
-                borderRadius: 12,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              Got it, let me bid
-            </button>
           </div>
-        </div>
+
+          <ReceiptDivider />
+
+          <p style={{ fontSize: 12, color: "#555", lineHeight: 1.7, textAlign: "center", marginBottom: 4 }}>
+            Items can only be claimed in person at{" "}
+            <a
+              href="https://partiful.com/e/BoaYBHLu23813PUTvyWf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#000", fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              Lydia&rsquo;s Farewell Party
+            </a>{" "}
+            on <strong>Sunday Jun 14, 1:30–5pm</strong>. Make sure you can make it before bidding!
+          </p>
+
+          <ReceiptDivider />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <div style={receiptLabel}>Your name</div>
+              <input
+                value={noticeName}
+                onChange={e => setNoticeName(e.target.value)}
+                placeholder="Alex"
+                style={receiptInput}
+              />
+            </div>
+            <div>
+              <div style={receiptLabel}>Email</div>
+              <input
+                value={noticeEmail}
+                onChange={e => setNoticeEmail(e.target.value)}
+                placeholder="alex@email.com"
+                type="email"
+                style={receiptInput}
+              />
+            </div>
+          </div>
+
+          <ReceiptDivider />
+
+          <button
+            type="button"
+            onClick={handlePickupNoticeAcknowledge}
+            disabled={!noticeName.trim() || !noticeEmail.trim()}
+            style={{
+              width: "100%",
+              padding: "11px 0",
+              background: noticeName.trim() && noticeEmail.trim() ? "#000" : "#e8e6e1",
+              color: noticeName.trim() && noticeEmail.trim() ? "#fff" : "#aaa",
+              border: "none",
+              borderRadius: 4,
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: noticeName.trim() && noticeEmail.trim() ? "pointer" : "default",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+            }}
+          >
+            Got it, let me bid
+          </button>
+        </ReceiptModal>
       )}
     </div>
   );
