@@ -93,6 +93,7 @@ export function ReceiptModal({
       style={{
         position: "fixed",
         inset: 0,
+        height: "100dvh",
         zIndex,
         display: "flex",
         flexDirection: "column",
@@ -111,6 +112,7 @@ export function ReceiptModal({
         style={{
           position: "fixed",
           inset: 0,
+          height: "100dvh",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
         }}

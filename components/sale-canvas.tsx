@@ -212,7 +212,7 @@ export function SaleCanvas() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FCFBF8" }}>
+    <div style={{ minHeight: "100dvh", background: "#FCFBF8" }}>
       {/* Dev-only test button for pickup notice */}
       {process.env.NODE_ENV !== "production" && !isGarageSaleView && !isAdmin && (
         <button

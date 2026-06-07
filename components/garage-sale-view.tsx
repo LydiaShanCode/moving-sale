@@ -148,7 +148,7 @@ export function GarageSaleView({ items, onItemClick, onClose, onTestNotice, onAd
   );
 
   return (
-    <div style={{ background: "#FCFBF8", padding: `0 ${PAGE_MARGIN}px`, minHeight: "100vh" }}>
+    <div style={{ background: "#FCFBF8", padding: `0 ${PAGE_MARGIN}px`, minHeight: "100dvh" }}>
       {toggleBtn}
       {process.env.NODE_ENV !== "production" && onTestNotice && (
         <button
