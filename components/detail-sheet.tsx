@@ -109,7 +109,7 @@ export function DetailSheet({ item, onClose, onBid }: DetailSheetProps) {
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
               <div style={receiptLabel}>Your bid ($)</div>
-              <input value={amount} onChange={e => setAmount(e.target.value.replace(/\D/g, ""))} placeholder={String(minBid)} type="number" min={minBid} style={receiptInput} autoFocus />
+              <input value={amount} onChange={e => setAmount(e.target.value.replace(/\D/g, ""))} placeholder={String(minBid)} type="number" min={minBid} style={receiptInput} />
             </div>
             <ReceiptDivider />
             <button
