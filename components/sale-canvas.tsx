@@ -7,7 +7,7 @@ import { DetailSheet } from "./detail-sheet";
 import { PasswordModal } from "./password-modal";
 import { AddItemSheet } from "./add-item-sheet";
 import { GarageSaleView } from "./garage-sale-view";
-import { SITE, AUCTION_END } from "@/lib/site";
+import { AUCTION_END } from "@/lib/site";
 import type { SaleItemPublic } from "@/lib/types";
 
 const POLL_MS = 8000;
@@ -44,7 +44,7 @@ export function SaleCanvas() {
   const [showAddSheet, setShowAddSheet] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SaleItemPublic | null>(null);
   const [items, setItems] = useState<SaleItemPublic[]>([]);
-  const [catalogTotal, setCatalogTotal] = useState(0);
+  const [, setCatalogTotal] = useState(0);
   const [isGarageSaleView, setIsGarageSaleView] = useState(false);
 
   const [showPickupNotice, setShowPickupNotice] = useState(false);
@@ -118,8 +118,6 @@ export function SaleCanvas() {
     if (isAdmin) fetchItems();
   }, [isAdmin, fetchItems]);
 
-  const availableCount = items.filter((i) => i.status === "available").length;
-  const displayTotal = isAdmin ? items.length : catalogTotal || items.length;
 
   const handleTitlePressStart = () => {
     longPressTimer.current = setTimeout(() => {

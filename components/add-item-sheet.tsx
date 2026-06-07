@@ -114,7 +114,7 @@ export function AddItemSheet({ onClose, onAdd }: AddItemSheetProps) {
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 14 }}>
         <div style={{ fontSize: 10, color: "#bbb", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>
-          Lydia's Moving Sale
+          Lydia&apos;s Moving Sale
         </div>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em" }}>New Item</div>
       </div>

@@ -93,7 +93,7 @@ export function ItemCard({
         setBidError(null);
         setBidSuccess(null);
       };
-      onBeforeBidOpen ? onBeforeBidOpen(openBidForm) : openBidForm();
+      if (onBeforeBidOpen) { onBeforeBidOpen(openBidForm); } else { openBidForm(); }
     }
   };
 

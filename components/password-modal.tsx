@@ -40,7 +40,7 @@ export function PasswordModal({ onSuccess, onDismiss }: PasswordModalProps) {
     <ReceiptModal onClose={onDismiss} label="Admin login" zIndex={200}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
         <div style={{ fontSize: 10, color: "#bbb", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>
-          Lydia's Moving Sale
+          Lydia&apos;s Moving Sale
         </div>
         <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.02em" }}>
           Admin Access
@@ -84,7 +84,7 @@ export function PasswordModal({ onSuccess, onDismiss }: PasswordModalProps) {
           type="button"
           onClick={attempt}
           disabled={loading || !pw.trim()}
-          style={solidBtn(pw.trim())}
+          style={solidBtn(!!pw.trim())}
         >
           {loading ? "…" : "Unlock"}
         </button>
