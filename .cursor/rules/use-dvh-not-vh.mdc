@@ -1,0 +1,23 @@
+---
+description: Use 100dvh instead of 100vh for full-height elements
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# Use `100dvh` not `100vh`
+
+Always use `100dvh` (dynamic viewport height) instead of `100vh` for any element intended to fill the screen height — backgrounds, modals, overlays, fixed backdrops.
+
+`100vh` on iOS Safari is calculated from the full viewport including hidden browser chrome, so it does not shrink when the keyboard opens, leaving a white gap below the content.
+
+```tsx
+/* ✅ correct */
+style={{ minHeight: "100dvh" }}
+style={{ height: "100dvh" }}
+
+/* ❌ never */
+style={{ minHeight: "100vh" }}
+style={{ height: "100vh" }}
+```
+
+This applies to all components: page wrappers, `position: fixed` backdrops, modals, sheets, and overlays.
