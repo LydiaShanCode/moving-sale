@@ -166,7 +166,7 @@ export function GarageSaleView({ items, onItemClick, onClose, onTestNotice, onAd
 
           {/* ── Blanket tile layer (behind everything) ── */}
           <div
-            style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 0, pointerEvents: "none" }}
+            style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}
             aria-hidden
           >
             {Array.from({ length: tileCount }).map((_, i) => (
